@@ -130,32 +130,55 @@ function generateTagPages() {
         const totalPages = Math.ceil(taggedPosts.length / 10);
         
         for (let page = 1; page <= totalPages; page++) {
-            const paginated = getPaginatedPosts(taggedPosts, page);
-            
-            const content = `
-                <h1>Posts tagged with "${tag}" - Page ${page}</h1>
-                ${paginated.posts.map(post => `
+          const paginated = getPaginatedPosts(taggedPosts, page)
+
+          const content = `
+                <h1>Posts tagged with "${tag}"${
+            page > 1 ? ` - Page ${page}` : ''
+          }</h1>
+                ${paginated.posts
+                  .map(
+                    post => `
                     <article>
-                        <h2><a href="/posts/${post.slug}.html">${post.metadata.title}</a></h2>
-                        <p>Posted on ${new Date(post.metadata.date).toLocaleDateString()}</p>
+                        <h2><a href="/posts/${post.slug}.html">${
+                      post.metadata.title
+                    }</a></h2>
+                        <p>Posted on ${new Date(
+                          post.metadata.date
+                        ).toLocaleDateString()}</p>
                         <div>${post.content}</div>
                     </article>
-                `).join('')}
+                `
+                  )
+                  .join('')}
                 <div class="pagination">
-                    ${paginated.hasPrevious ? `<a href="/tags/${tag}/${page - 1}.html">Previous</a>` : ''}
-                    ${paginated.hasNext ? `<a href="/tags/${tag}/${page + 1}.html">Next</a>` : ''}
+                    ${
+                      paginated.hasPrevious
+                        ? `<a href="/tags/${tag}/${
+                            page === 2 ? '' : page - 1
+                          }.html">Previous</a>`
+                        : ''
+                    }
+                    ${
+                      paginated.hasNext
+                        ? `<a href="/tags/${tag}/${page + 1}.html">Next</a>`
+                        : ''
+                    }
                 </div>
-            `;
-            
-            const tagDir = path.join(DIST_DIR, 'tags', tag);
-            if (!fs.existsSync(tagDir)) {
-                fs.mkdirSync(tagDir, { recursive: true });
-            }
-            
-            fs.writeFileSync(
-                path.join(tagDir, `${page}.html`),
-                renderHTML(content, `Tag: ${tag} - Page ${page}`)
-            );
+            `
+
+          const tagDir = path.join(DIST_DIR, 'tags', tag)
+          if (!fs.existsSync(tagDir)) {
+            fs.mkdirSync(tagDir, { recursive: true })
+          }
+
+          // Use index.html for first page, otherwise use page number
+          const filename = page === 1 ? 'index.html' : `${page}.html`
+
+          fs.writeFileSync(
+            path.join(tagDir, filename),
+            renderHTML(content, `Tag: ${tag}${page > 1 ? ` - Page ${page}` : ''}`)
+          )
         }
     }
 }
