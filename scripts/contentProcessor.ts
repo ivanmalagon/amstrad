@@ -37,16 +37,19 @@ export function getPostsByTag(tag: string): Post[] {
   return getAllPosts().filter(post => post.metadata.tags.includes(tag));
 }
 
-export function getPaginatedPosts(posts: Post[], page: number, perPage: number = 10) {
-  const start = (page - 1) * perPage;
-  const end = start + perPage;
-  const paginatedPosts = posts.slice(start, end);
-  
+export function getPaginatedPosts(posts: Post[], page: number, perPage: number) {
+  if (!perPage) {
+    throw new Error('perPage is required for pagination')
+  }
+  const start = (page - 1) * perPage
+  const end = start + perPage
+  const paginatedPosts = posts.slice(start, end)
+
   return {
     posts: paginatedPosts,
     currentPage: page,
     totalPages: Math.ceil(posts.length / perPage),
     hasNext: end < posts.length,
     hasPrevious: start > 0
-  };
+  }
 } 

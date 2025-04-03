@@ -2,7 +2,7 @@
 title: Hello World
 date: 2024-03-20
 updated: 2024-03-20
-tags: [welcome, first-post]
+tags: [thoughts]
 ---
 
 # Hello World!
