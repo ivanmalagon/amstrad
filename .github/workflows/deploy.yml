@@ -35,15 +35,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Clean dist directory
-        run: rm -rf dist
+      - name: Clean _site directory
+        run: rm -rf _site
 
       - name: List directory before build
         run: |
           echo "Directory structure before build:"
           ls -la
-          echo "Dist directory before build:"
-          ls -la dist || echo "dist directory does not exist"
+          echo "_site directory before build:"
+          ls -la _site || echo "_site directory does not exist"
 
       - name: Build
         run: pnpm build
@@ -52,10 +52,10 @@ jobs:
         run: |
           echo "Directory structure after build:"
           ls -la
-          echo "Dist directory contents:"
-          ls -la dist
-          echo "Dist directory structure:"
-          find dist -type f -o -type d | sort
+          echo "_site directory contents:"
+          ls -la _site
+          echo "_site directory structure:"
+          find _site -type f -o -type d | sort
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -63,7 +63,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/
+          path: _site/
 
   deploy:
     environment:
