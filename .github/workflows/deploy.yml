@@ -35,15 +35,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Clean _site directory
-        run: rm -rf _site
+      - name: Clean site directory
+        run: rm -rf site
 
       - name: List directory before build
         run: |
           echo "Directory structure before build:"
           ls -la
-          echo "_site directory before build:"
-          ls -la _site || echo "_site directory does not exist"
+          echo "site directory before build:"
+          ls -la site || echo "site directory does not exist"
 
       - name: Build
         run: pnpm build
@@ -52,13 +52,22 @@ jobs:
         run: |
           echo "Directory structure after build:"
           ls -la
-          echo "_site directory contents:"
-          ls -la _site
-          echo "_site directory structure:"
-          find _site -type f -o -type d | sort
+          echo "site directory contents:"
+          ls -la site
+          echo "site directory structure:"
+          find site -type f -o -type d | sort
+
+      - name: Create tar.gz archive
+        run: |
+          cd site
+          tar -czf ../site.tar.gz .
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: site.tar.gz
+          retention-days: 1
 
   deploy:
     environment:
@@ -67,6 +76,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: .
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4 

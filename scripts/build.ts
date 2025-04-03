@@ -3,7 +3,7 @@ import path from 'path'
 import { getAllPosts, getPaginatedPosts, getPostsByTag } from './contentProcessor'
 import { processCSS } from './cssProcessor'
 
-const DIST_DIR = path.join(process.cwd(), '_site')
+const DIST_DIR = path.join(process.cwd(), 'site')
 const SRC_DIR = path.join(process.cwd(), 'src')
 const PUBLIC_DIR = path.join(SRC_DIR, 'public')
 const PAGINATION_LIMIT = 3
