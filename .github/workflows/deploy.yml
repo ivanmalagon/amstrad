@@ -57,10 +57,13 @@ jobs:
           echo "_site directory structure:"
           find _site -type f -o -type d | sort
 
+      - name: Create temp directory
+        run: mkdir -p temp
+
       - name: Create tar.gz archive
         run: |
           cd _site
-          tar -czf ./site.tar.gz .
+          tar -czf ../temp/site.tar.gz .
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -68,7 +71,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: temp/
 
   deploy:
     environment:
