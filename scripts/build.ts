@@ -31,9 +31,21 @@ if (!fs.existsSync(DIST_DIR)) {
   fs.mkdirSync(DIST_DIR, { recursive: true })
 }
 
-// Copy public files (excluding styles.css since we process it separately)
+// Ensure public directory exists in site
+const sitePublicDir = path.join(DIST_DIR, 'public')
+if (!fs.existsSync(sitePublicDir)) {
+  fs.mkdirSync(sitePublicDir, { recursive: true })
+}
+
+// Copy public files from src/public
 if (fs.existsSync(PUBLIC_DIR)) {
-  fs.cpSync(PUBLIC_DIR, path.join(DIST_DIR, 'public'), { recursive: true })
+  fs.cpSync(PUBLIC_DIR, sitePublicDir, { recursive: true })
+}
+
+// Copy processed CSS from dist/public to site/public
+const distPublicDir = path.join(process.cwd(), 'dist', 'public')
+if (fs.existsSync(distPublicDir)) {
+  fs.cpSync(distPublicDir, sitePublicDir, { recursive: true })
 }
 
 // Helper function to render HTML with processed CSS
