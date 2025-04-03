@@ -57,16 +57,11 @@ jobs:
           echo "site directory structure:"
           find site -type f -o -type d | sort
 
-      - name: Create tar.gz archive
-        run: |
-          cd site
-          tar -czf ../site.tar.gz .
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: site.tar.gz
+          path: site
           retention-days: 1
 
   deploy:
