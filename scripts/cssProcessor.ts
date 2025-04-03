@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 const STYLES_DIR = path.join(process.cwd(), 'src/styles');
-const DIST_DIR = path.join(process.cwd(), 'dist');
+const DIST_DIR = path.join(process.cwd(), 'site')
 
 export function processCSS(): { filename: string; content: string } {
     const cssContent = fs.readFileSync(path.join(STYLES_DIR, 'main.css'), 'utf8');

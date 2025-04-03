@@ -42,11 +42,6 @@ if (fs.existsSync(PUBLIC_DIR)) {
   fs.cpSync(PUBLIC_DIR, sitePublicDir, { recursive: true })
 }
 
-// Copy processed CSS from dist/public to site/public
-const distPublicDir = path.join(process.cwd(), 'dist', 'public')
-if (fs.existsSync(distPublicDir)) {
-  fs.cpSync(distPublicDir, sitePublicDir, { recursive: true })
-}
 
 // Helper function to render HTML with processed CSS
 function renderHTML(content: string, title: string): string {
