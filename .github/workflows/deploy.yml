@@ -35,8 +35,27 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Clean dist directory
+        run: rm -rf dist
+
+      - name: List directory before build
+        run: |
+          echo "Directory structure before build:"
+          ls -la
+          echo "Dist directory before build:"
+          ls -la dist || echo "dist directory does not exist"
+
       - name: Build
         run: pnpm build
+
+      - name: List generated content
+        run: |
+          echo "Directory structure after build:"
+          ls -la
+          echo "Dist directory contents:"
+          ls -la dist
+          echo "Dist directory structure:"
+          find dist -type f -o -type d | sort
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
