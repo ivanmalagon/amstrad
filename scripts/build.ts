@@ -144,7 +144,7 @@ function generateTagsPage() {
             ${Array.from(tags)
               .map(
                 tag => `
-                <li><a href="/tags/${tag}.html">${tag}</a></li>
+                <li><a href="/tags/${tag}/index.html">${tag}</a></li>
             `
               )
               .join('')}
