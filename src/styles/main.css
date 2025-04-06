@@ -39,6 +39,7 @@ nav {
 nav .container {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 nav ul {
@@ -196,4 +197,17 @@ ul li::before {
 .tag-description {
     margin-top: 0;
     margin-bottom: 1rem;
+}
+
+.home-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.logo {
+    height: 2rem;
+    width: auto;
+
 }
