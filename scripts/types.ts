@@ -18,3 +18,5 @@ export interface PaginatedPosts {
   hasNext: boolean;
   hasPrevious: boolean;
 } 
+
+export type Tag = 'technology' | 'books' | 'thoughts' | 'links' | 'games' | 'movies' | 'tv' | 'food' | 'travel' | 'about' | 'home'

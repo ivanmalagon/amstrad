@@ -1,23 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"
+      rel="stylesheet"
+    />
+
     <title>{{ title }}</title>
-    <link rel="stylesheet" href="{{ cssPath }}">
-</head>
-<body>
+    <link rel="stylesheet" href="{{ cssPath }}" />
+  </head>
+  <body>
     <nav>
-        <div class="container">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/tags.html">Tags</a></li>
-                <li><a href="/now.html">Now</a></li>
-            </ul>
-        </div>
+      <div class="container">
+        <span><a href="/">IVAN's JUNKYARD</a></span>
+        <ul>
+          <li><a href="/tags.html">Tags</a></li>
+          <li><a href="/now.html">Now</a></li>
+        </ul>
+      </div>
     </nav>
-    <main class="container">
-        {{ content }}
-    </main>
-</body>
-</html> 
+    <main class="container">{{ content }}</main>
+  </body>
+</html>

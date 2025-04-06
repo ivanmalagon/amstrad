@@ -1,21 +1,44 @@
+:root {
+    --font-header: "Work Sans", sans-serif;
+    --font-body: "Nunito Sans", sans-serif;
+    --font-mono: "Source Code Pro", monospace;
+    --font-size: 16px;
+    --line-height: 1.5;
+    --color: #333;
+    --bkg: #F2A47711;
+    --black: #333;
+    --gray: #333333AA;
+    --blue: #5A98BF;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    line-height: 1.6;
+    font-family: var(--font-body);
+    font-optical-sizing: auto;
+    font-size: var(--font-size);
+    line-height: var(--line-height);
     margin: 0;
     padding: 0;
-    color: #333;
+    color: var(--color);
+    background-color: var(--bkg);
 }
 
 .container {
-    max-width: 800px;
+    max-width: 620px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 0 2rem;
 }
 
 nav {
-    background: #f5f5f5;
-    padding: 1rem;
-    margin-bottom: 2rem;
+    background: var(--bkg);
+    padding: 1rem 2rem;
+    margin-bottom: 1rem;
+    color: var(--black);
+    border-bottom: 1px solid var(--gray);
+}
+
+nav .container {
+    display: flex;
+    justify-content: space-between;
 }
 
 nav ul {
@@ -28,17 +51,36 @@ nav ul {
 
 nav a {
     text-decoration: none;
-    color: #333;
 }
 
 nav a:hover {
-    color: #666;
+    color: var(--blue);
+}
+
+nav a:visited {
+    color: var(--black);
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li::before {
+    content: "";
+    position: absolute;
+    margin-left: -1rem;
+}
+
+a:visited {
+    color: var(--color);
 }
 
 .pagination {
     display: flex;
     gap: 1rem;
     margin-top: 2rem;
+    margin-bottom: 2rem;
+    justify-content: space-between;
 }
 
 .pagination a {
@@ -49,3 +91,109 @@ nav a:hover {
 .pagination a:hover {
     color: #666;
 } 
+
+h2 {
+    font-family: "Nunito Sans", sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--gray);
+    margin: 2rem 0;
+}
+
+article h2 {
+    font-family: "Nunito Sans", sans-serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin: 0 1rem 1rem 0;
+}
+
+article h2 a {
+    text-decoration: none;
+    color: var(--black);
+}
+
+article header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+}
+
+article header .date {
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+article p {
+    margin: 0 0 1rem 0;
+}
+
+article .tag-emoji {
+    font-size: 1.4rem;
+    margin-right: 0.5em;
+}
+
+article .tag-emoji a {
+    text-decoration: none;
+}
+
+blockquote {
+    font-style: italic;
+    margin: 0 0 1rem 0;
+    padding: 1rem;
+    border: 0;
+    border-left: 2px solid var(--gray);
+    background-color: var(--bkg);
+}
+
+blockquote p {
+    margin: 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+ul {
+    list-style: none;
+    padding-left: 1rem;
+}
+
+ul li::before {
+    content: "-";
+    position: absolute;
+    margin-left: -1rem;
+}
+
+.tag-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag-list a {
+    text-decoration: none;
+}
+
+.tag-item {
+    font-size: 1.4rem;  
+    text-transform: capitalize;
+}
+
+.tag-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.tag-description {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}

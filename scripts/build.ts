@@ -1,30 +1,14 @@
 import fs from 'fs'
 import path from 'path'
 import { getAllPosts, getPaginatedPosts, getPostsByTag } from './contentProcessor'
-import { processCSS } from './cssProcessor'
-
+import { generateArticleContent, generateTagHref, getTagDescription, getTagEmoji } from './generators'
+import { generateNowPage } from './now'
+import { renderHTML } from './render'
+import { Tag } from './types'
 const DIST_DIR = path.join(process.cwd(), 'site')
 const SRC_DIR = path.join(process.cwd(), 'src')
 const PUBLIC_DIR = path.join(SRC_DIR, 'public')
-const PAGINATION_LIMIT = 3
-
-// Helper function to render template
-function renderTemplate(template: string, data: Record<string, any>): string {
-  let result = template
-  for (const [key, value] of Object.entries(data)) {
-    result = result.replace(new RegExp(`{{ ${key} }}`, 'g'), value)
-  }
-  return result
-}
-
-// Read base template
-const baseTemplate = fs.readFileSync(
-  path.join(process.cwd(), 'src/layouts/base.html'),
-  'utf8'
-)
-
-// Process CSS and get hashed filename
-const { filename: cssFilename } = processCSS()
+const PAGINATION_LIMIT = 10
 
 // Ensure dist directory exists
 if (!fs.existsSync(DIST_DIR)) {
@@ -42,38 +26,17 @@ if (fs.existsSync(PUBLIC_DIR)) {
   fs.cpSync(PUBLIC_DIR, sitePublicDir, { recursive: true })
 }
 
-
-// Helper function to render HTML with processed CSS
-function renderHTML(content: string, title: string): string {
-  return renderTemplate(baseTemplate, {
-    title,
-    content,
-    cssPath: `/public/${cssFilename}`
-  })
-}
-
 // Generate home page
 function generateHomePage() {
   const allPosts = getAllPosts()
   const paginated = getPaginatedPosts(allPosts, 1, PAGINATION_LIMIT)
 
   const content = `
-        <h1>Latest Posts</h1>
         ${paginated.posts
-          .map(
-            post => `
-            <article>
-                <h2><a href="/posts/${post.slug}.html">${
-              post.metadata.title
-            }</a></h2>
-                <p>Posted on ${new Date(post.metadata.date).toLocaleDateString()}</p>
-                <div>${post.content}</div>
-            </article>
-        `
-          )
+          .map(post => generateArticleContent(post))
           .join('')}
         <div class="pagination">
-            ${paginated.hasNext ? `<a href="/page/2.html">Next</a>` : ''}
+            ${paginated.hasNext ? `<span></span><a href="/page/2.html">Next&nbsp;&raquo;</a>` : ''}
         </div>
     `
 
@@ -89,33 +52,21 @@ function generatePaginatedHomePages() {
     const paginated = getPaginatedPosts(allPosts, page, PAGINATION_LIMIT)
 
     const content = `
-            <h1>Latest Posts - Page ${page}</h1>
             ${paginated.posts
               .map(
-                post => `
-                <article>
-                    <h2><a href="/posts/${post.slug}.html">${
-                  post.metadata.title
-                }</a></h2>
-                    <p>Posted on ${new Date(
-                      post.metadata.date
-                    ).toLocaleDateString()}</p>
-                    <div>${post.content}</div>
-                </article>
-            `
-              )
+                post => generateArticleContent(post))
               .join('')}
             <div class="pagination">
                 ${
                   paginated.hasPrevious
                     ? `<a href="${
                         page - 1 === 1 ? '/' : `/page/${page - 1}.html`
-                      }">Previous</a>`
-                    : ''
+                      }">&laquo;&nbsp;Previous</a>`
+                    : '<span></span>'
                 }
                 ${
                   paginated.hasNext
-                    ? `<a href="/page/${page + 1}.html">Next</a>`
+                    ? `<a href="/page/${page + 1}.html">Next&nbsp;&raquo;</a>`
                     : ''
                 }
             </div>
@@ -140,15 +91,15 @@ function generateTagsPage() {
 
   const content = `
         <h1>Tags</h1>
-        <ul>
+        <div class="tag-list">
             ${Array.from(tags)
               .map(
                 tag => `
-                <li><a href="/tags/${tag}/index.html">${tag}</a></li>
+                <div class="tag-item"><a ${generateTagHref(tag as Tag)}>${getTagEmoji(tag as Tag)} ${tag}</a></div>
             `
               )
               .join('')}
-        </ul>
+        </div>
     `
 
   fs.writeFileSync(path.join(DIST_DIR, 'tags.html'), renderHTML(content, 'Tags'))
@@ -167,35 +118,22 @@ function generateTagPages() {
       const paginated = getPaginatedPosts(taggedPosts, page, PAGINATION_LIMIT)
 
       const content = `
-                <h1>Posts tagged with "${tag}"${
-        page > 1 ? ` - Page ${page}` : ''
-      }</h1>
+                <h1 class="tag-title">${tag}</h1>
+                <p class="tag-description">${getTagDescription(tag as Tag)}</p>
                 ${paginated.posts
-                  .map(
-                    post => `
-                    <article>
-                        <h2><a href="/posts/${post.slug}.html">${
-                      post.metadata.title
-                    }</a></h2>
-                        <p>Posted on ${new Date(
-                          post.metadata.date
-                        ).toLocaleDateString()}</p>
-                        <div>${post.content}</div>
-                    </article>
-                `
-                  )
+                  .map(post => generateArticleContent(post))
                   .join('')}
                 <div class="pagination">
                     ${
                       paginated.hasPrevious
                         ? `<a href="/tags/${tag}/${
                             page === 2 ? '' : `${page - 1}.html`
-                          }">Previous</a>`
-                        : ''
+                          }">&laquo;&nbsp;Previous</a>`
+                        : '<span></span>'
                     }
                     ${
                       paginated.hasNext
-                        ? `<a href="/tags/${tag}/${page + 1}.html">Next</a>`
+                        ? `<a href="/tags/${tag}/${page + 1}.html">Next&nbsp;&raquo;</a>`
                         : ''
                     }
                 </div>
@@ -222,13 +160,7 @@ function generatePostPages() {
   const allPosts = getAllPosts()
 
   for (const post of allPosts) {
-    const content = `
-            <article>
-                <h1>${post.metadata.title}</h1>
-                <p>Posted on ${new Date(post.metadata.date).toLocaleDateString()}</p>
-                ${post.content}
-            </article>
-        `
+    const content = generateArticleContent(post)
 
     const postsDir = path.join(DIST_DIR, 'posts')
     if (!fs.existsSync(postsDir)) {
@@ -242,16 +174,6 @@ function generatePostPages() {
   }
 }
 
-// Generate now page
-function generateNowPage() {
-  const content = `
-        <h1>Now</h1>
-        <p>This is a static page about what I'm currently working on.</p>
-    `
-
-  fs.writeFileSync(path.join(DIST_DIR, 'now.html'), renderHTML(content, 'Now'))
-}
-
 // Run all generators
 function build() {
   console.log('Starting build process...')
@@ -261,7 +183,7 @@ function build() {
   generateTagsPage()
   generateTagPages()
   generatePostPages()
-  generateNowPage()
+  generateNowPage(DIST_DIR)
 
   console.log('Build completed successfully!')
 }
