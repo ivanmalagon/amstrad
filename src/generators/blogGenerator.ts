@@ -1,7 +1,6 @@
 import { ContentProcessor } from '../utils/contentProcessor'
 import { TemplateRenderer } from '../utils/templateRenderer'
-import { BlogPost, PaginationInfo } from '../types/blog'
-import { blogConfig } from '../config/blog'
+import { BlogPost } from '../types/blog'
 
 export class BlogGenerator {
   private contentProcessor: ContentProcessor
@@ -34,9 +33,9 @@ export class BlogGenerator {
       await this.generatePostPages(allPosts)
       console.log('✅ Páginas de artículos generadas')
 
-      // Generate home page with pagination
+      // Generate home page
       console.log('🏠 Generando página de inicio...')
-      await this.generateHomePages(allPosts)
+      await this.templateRenderer.renderHomePage(allPosts)
       console.log('✅ Página de inicio generada')
 
       console.log('🎉 ¡Blog generado exitosamente!')
@@ -52,52 +51,6 @@ export class BlogGenerator {
   private async generatePostPages(posts: BlogPost[]): Promise<void> {
     const promises = posts.map(post => this.templateRenderer.renderPost(post))
     await Promise.all(promises)
-  }
-
-  /**
-   * Generate home pages with pagination
-   */
-  private async generateHomePages(allPosts: BlogPost[]): Promise<void> {
-    const postsPerPage = blogConfig.postsPerPage
-    const totalPages = Math.ceil(allPosts.length / postsPerPage)
-
-    // Generate main index page (page 1)
-    const firstPagePosts = allPosts.slice(0, postsPerPage)
-    const pagination = this.createPaginationInfo(1, totalPages)
-    await this.templateRenderer.renderHomePage(firstPagePosts, pagination)
-
-    // Generate additional pages if needed
-    if (totalPages > 1) {
-      for (let page = 2; page <= totalPages; page++) {
-        const startIndex = (page - 1) * postsPerPage
-        const endIndex = startIndex + postsPerPage
-        const pagePosts = allPosts.slice(startIndex, endIndex)
-        const pagePagination = this.createPaginationInfo(page, totalPages)
-
-        await this.templateRenderer.renderHomePage(
-          pagePosts,
-          pagePagination,
-          `page/${page}/index.html`
-        )
-      }
-    }
-  }
-
-  /**
-   * Create pagination information
-   */
-  private createPaginationInfo(
-    currentPage: number,
-    totalPages: number
-  ): PaginationInfo {
-    return {
-      currentPage,
-      totalPages,
-      hasNext: currentPage < totalPages,
-      hasPrev: currentPage > 1,
-      nextPage: currentPage < totalPages ? currentPage + 1 : undefined,
-      prevPage: currentPage > 1 ? currentPage - 1 : undefined
-    }
   }
 
   /**

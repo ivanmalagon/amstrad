@@ -6,8 +6,9 @@
   "scripts": {
     "build": "ts-node src/build.ts build",
     "build:post": "ts-node src/build.ts post",
-    "dev": "ts-node src/build.ts dev",
-    "dev:watch": "ts-node src/build.ts dev",
+    "dev": "ts-node src/dev-server.ts",
+    "dev:watch": "ts-node src/dev-server.ts",
+    "dev:build-only": "ts-node src/build.ts dev",
     "clean": "rm -rf site"
   },
   "keywords": [],

@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { BlogPost, PaginationInfo } from '../types/blog'
+import { BlogPost } from '../types/blog'
 import { blogConfig } from '../config/blog'
 
 export class TemplateRenderer {
@@ -37,9 +37,16 @@ export class TemplateRenderer {
       </article>
     `
 
+    const articleNav = `
+      <nav class="article-nav">
+        <span><a href="/" class="home-link">← resonance</a></span>
+      </nav>
+    `
+
     const html = this.renderLayout(layout, {
       title: `${post.title} - ${blogConfig.title}`,
-      content
+      content,
+      navigation: articleNav
     })
 
     await this.writeFile(`posts/${post.slug}.html`, html)
@@ -48,45 +55,46 @@ export class TemplateRenderer {
   /**
    * Render the home page with article index
    */
-  async renderHomePage(
-    posts: BlogPost[],
-    pagination?: PaginationInfo,
-    outputPath?: string
-  ): Promise<void> {
+  async renderHomePage(posts: BlogPost[]): Promise<void> {
     const layout = this.loadLayout()
 
     const articlesHtml = posts
       .map(
         post => `
-      <article>
-        <header>
+      <li>
+        <span>
           <h2><a href="/posts/${post.slug}.html">${post.title}</a></h2>
-            <div class="post-meta">
+            <span class="post-meta">
               <time class="date">${post.date}</time>
-            </div>
-        </header>
-        <p>${post.excerpt}</p>
-      </article>
+            </span>
+        </span>
+      </li>
     `
       )
       .join('')
 
-    const paginationHtml = pagination ? this.renderPagination(pagination) : ''
-
     const content = `
-      <div class="home-content">
-        <h1>Artículos recientes</h1>
+      <ul class="article-list">
         ${articlesHtml}
-        ${paginationHtml}
-      </div>
+      </ul>
+    `
+
+    const homeNav = `
+      <nav class="home-nav">
+        <span class="home-header">RESONANCE</span>
+        <ul>
+          <li><a href="/now.html">Now</a></li>
+        </ul>
+      </nav>
     `
 
     const html = this.renderLayout(layout, {
       title: blogConfig.title,
-      content
+      content,
+      navigation: homeNav
     })
 
-    await this.writeFile(outputPath || 'index.html', html)
+    await this.writeFile('index.html', html)
   }
 
   /**
@@ -117,31 +125,6 @@ export class TemplateRenderer {
     })
 
     return html
-  }
-
-  /**
-   * Render pagination HTML
-   */
-  private renderPagination(pagination: PaginationInfo): string {
-    if (!pagination.hasNext && !pagination.hasPrev) {
-      return ''
-    }
-
-    const prevLink = pagination.hasPrev
-      ? `<a href="/page/${pagination.prevPage}/index.html" class="prev">← Anterior</a>`
-      : '<span class="prev disabled">← Anterior</span>'
-
-    const nextLink = pagination.hasNext
-      ? `<a href="/page/${pagination.nextPage}/index.html" class="next">Siguiente →</a>`
-      : '<span class="next disabled">Siguiente →</span>'
-
-    return `
-      <div class="pagination">
-        ${prevLink}
-        <span class="page-info">Página ${pagination.currentPage} de ${pagination.totalPages}</span>
-        ${nextLink}
-      </div>
-    `
   }
 
   /**

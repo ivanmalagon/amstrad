@@ -10,18 +10,6 @@ export interface BlogPost {
 
 export interface BlogConfig {
   title: string
-  description: string
   author: string
   baseUrl: string
-  postsPerPage: number
-  language: string
-}
-
-export interface PaginationInfo {
-  currentPage: number
-  totalPages: number
-  hasNext: boolean
-  hasPrev: boolean
-  nextPage?: number
-  prevPage?: number
 }
