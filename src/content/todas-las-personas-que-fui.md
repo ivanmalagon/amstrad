@@ -2,7 +2,6 @@
 title: Todas las personas que fui
 date: 2025-06-12
 updated: 2024-06-12
-tags: [books]
 ---
 
 My favorite quotes from the novel "Todas las personas que fui" by Alfonso Casas. Although I could highlight all of it.
@@ -26,11 +25,13 @@ My favorite quotes from the novel "Todas las personas que fui" by Alfonso Casas.
 > Algunas de estas columnas se han quedado obsoletas y ya no sujetan nada. Otras solo son grandes losas que te impiden avanzar, y ahora que se han caído no tienes por qué levantarlas de nuevo.
 
 > Alfonso: Oye, y tú por qué me ayudas? Pensaba que te caía mal.
+
     Cris: Qué va! Si en realidad nosotros te queremos! Bueno, básicamente te queremos... vivo. Sin ti no existiríamos: lo nuestro es como una simbiosis.
 
 ? Cris: Pensar tanto en los caminos que no recorriste te impide disfrutar del que has escogido. En algún momento tienes que despedirte de ellos. No debes preocuparte por los caminos que has dejado atrás. Sino por todos los que se abren ante ti.
 
 > Alfonso: Pero, y si me equivoco?
+
     Cris: Si avanzas no te equivocas. El verdadero error es quedarte inmóvil. Todo lo demás es... camino.
 
 > Cris: La terapia no es algo milagroso. Es como un paraguas: no impide que llueva pero te ayuda a no empaparte.
@@ -50,6 +51,7 @@ My favorite quotes from the novel "Todas las personas que fui" by Alfonso Casas.
 > La vida es como una de esas bolas de nieve de cristal. Es frágil y tienes que manejarla con cuidado. Pero si no la agitas un poco, te estás perdiendo algo.
 
 > A: Si ya ni siquiera puedo dibujar, entonces, qué soy?
+
     C: Quizá te sorprenda, pero incluso si dejaras de dibujar, seguirías siendo tú.
 
 > Los recuerdos son como un hotel. Puedes visitarlos, pero no quedarte a vivir en ellos.
