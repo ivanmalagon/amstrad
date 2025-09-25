@@ -23,12 +23,7 @@ export class TemplateRenderer {
         <header>
           <h1>${post.title}</h1>
           <div class="post-meta">
-            <time class="date">${post.date}</time>
-            ${
-              post.updated
-                ? `<time class="updated">Actualizado: ${post.updated}</time>`
-                : ''
-            }
+            <time class="mini">${post.date}</time>
           </div>
         </header>
         <div class="post-content">
@@ -64,7 +59,7 @@ export class TemplateRenderer {
       <li>
         <span>
           <h2><a href="/posts/${post.slug}.html">${post.title}</a></h2>
-            <span class="post-meta">
+            <span class="mini">
               <time class="date">${post.date}</time>
             </span>
         </span>
