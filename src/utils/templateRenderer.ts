@@ -18,7 +18,12 @@ export class TemplateRenderer {
   async renderPost(post: BlogPost): Promise<void> {
     const layout = this.loadLayout()
 
-    const content = `
+    const articleNav = `
+      <nav class="article-nav">
+        <span><a href="/" class="home-link">← resonance</a></span>
+      </nav>
+    `
+    const articleContent = `
       <article>
         <header>
           <h1>${post.title}</h1>
@@ -32,16 +37,9 @@ export class TemplateRenderer {
       </article>
     `
 
-    const articleNav = `
-      <nav class="article-nav">
-        <span><a href="/" class="home-link">← resonance</a></span>
-      </nav>
-    `
-
     const html = this.renderLayout(layout, {
       title: `${post.title} - ${blogConfig.title}`,
-      content,
-      navigation: articleNav
+      content: `${articleNav}${articleContent}`
     })
 
     await this.writeFile(`posts/${post.slug}.html`, html)

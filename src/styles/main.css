@@ -36,6 +36,7 @@
 :root {
   --font-header: 'Bedstead', monospace;
   --font-body: 'Bedstead', monospace;
+  --font-size-micro: 10px;
   --font-size-mini: 15px;
   --font-size-base: 20px;
   --font-size-large: 30px;
@@ -83,6 +84,10 @@ body {
 
 main {
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 h1 {
@@ -93,6 +98,8 @@ h1 {
   font-style: normal;
   font-stretch: ultra-condensed;
   color: var(--blue);
+  margin-top: var(--font-size-large);
+  margin-bottom: var(--font-size-micro);
 }
 
 h2 {
@@ -146,8 +153,8 @@ blockquote p {
 }
 
 .article-nav {
-  max-width: var(--content-max-width);
-  margin: 2rem auto 0 auto;
+  width: 100%;
+  margin: 1rem auto 0 auto;
 }
 
 .home-header {
