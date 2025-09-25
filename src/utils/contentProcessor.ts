@@ -133,7 +133,7 @@ export class ContentProcessor {
         throw new Error('Invalid date')
       }
 
-      return format(date, "dd 'de' MMMM 'de' yyyy", { locale: es })
+      return format(date, 'dd MMM, yyyy')
     } catch (error) {
       console.warn(`Invalid date format: ${dateString}`)
       return dateString

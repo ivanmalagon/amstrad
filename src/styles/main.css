@@ -40,11 +40,15 @@
   --font-size-mini: 15px;
   --font-size-base: 20px;
   --font-size-large: 30px;
+  --font-size-xlarge: 40px;
   --color: #b6e3b6;
   --color-blockquote: #7fa87f;
-  --color-blockquote-border: #e27b58;
+  --color-link: #7fa87f;
+  --color-dark-green: rgb(72, 107, 72);
   --bkg: #0c1110;
   --blue: #d19a66;
+  --bg-blue: #0080ff;
+  --white: #ffffff;
   --content-max-width: 60ch;
   font-size: var(--font-size-base);
 }
@@ -148,24 +152,37 @@ blockquote p {
 }
 
 .home-nav {
-  max-width: var(--content-max-width);
-  margin: 2rem auto 0 auto;
-}
-
-.article-nav {
   width: 100%;
   margin: 1rem auto 0 auto;
 }
 
+.article-nav {
+  width: 100%;
+  margin: 1rem 0 0 0;
+  display: flex;
+  color: var(--white);
+  text-decoration: none;
+  background-color: var(--bg-blue);
+  height: calc(var(--font-size-base) * 1.5);
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 0.5rem;
+}
+
 .home-header {
+  display: flex;
   font-family: var(--font-header);
   font-size: var(--font-size-xlarge);
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
-  font-stretch: ultra-condensed;
-  color: var(--blue);
+  color: var(--white);
   text-decoration: none;
+  background-color: var(--bg-blue);
+  height: calc(var(--font-size-xlarge) * 1.5);
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 1rem;
 }
 
 .home-link {
@@ -175,7 +192,6 @@ blockquote p {
   font-weight: 500;
   font-style: normal;
   font-stretch: ultra-condensed;
-  color: var(--blue);
   text-decoration: none;
 }
 
@@ -183,7 +199,7 @@ blockquote p {
 .home-link:hover,
 .home-link:focus,
 .home-link:active {
-  color: var(--blue);
+  color: var(--white);
   text-decoration: none;
 }
 
@@ -193,6 +209,20 @@ blockquote p {
   margin: 0;
 }
 
+.article-list li {
+  margin-bottom: var(--font-size-base);
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: flex-start;
+  font-size: var(--font-size-large);
+}
+
+.article-list li .date {
+  margin-left: var(--font-size-base);
+  color: var(--color-dark-green);
+}
+
 .mini {
   font-size: var(--font-size-mini);
   line-height: 1.5;
@@ -200,4 +230,39 @@ blockquote p {
   font-weight: 400;
   font-style: normal;
   color: var(--color-blockquote);
+}
+
+/* Link styles - all states use --color-link with no decoration */
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:focus {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:active {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.spacer {
+  height: 2rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
 }

@@ -56,10 +56,10 @@ export class TemplateRenderer {
         post => `
       <li>
         <span>
-          <h2><a href="/posts/${post.slug}.html">${post.title}</a></h2>
-            <span class="mini">
-              <time class="date">${post.date}</time>
-            </span>
+          <a href="/posts/${post.slug}.html">${post.title}</a>
+        </span>
+        <span class="mini date">
+          <time>${post.date}</time>
         </span>
       </li>
     `
@@ -67,6 +67,7 @@ export class TemplateRenderer {
       .join('')
 
     const content = `
+      <div class="spacer"></div>
       <ul class="article-list">
         ${articlesHtml}
       </ul>
@@ -75,16 +76,12 @@ export class TemplateRenderer {
     const homeNav = `
       <nav class="home-nav">
         <span class="home-header">RESONANCE</span>
-        <ul>
-          <li><a href="/now.html">Now</a></li>
-        </ul>
       </nav>
     `
 
     const html = this.renderLayout(layout, {
       title: blogConfig.title,
-      content,
-      navigation: homeNav
+      content: `${homeNav}${content}`
     })
 
     await this.writeFile('index.html', html)
