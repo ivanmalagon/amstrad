@@ -12,4 +12,5 @@ export interface BlogConfig {
   title: string
   author: string
   baseUrl: string
+  rssMaxItems?: number
 }
