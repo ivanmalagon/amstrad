@@ -4,6 +4,8 @@ date: 2025-06-12
 updated: 2024-06-12
 ---
 
+![Todas las personas que fui SNES](/public/todas-las-personas.png)
+
 My favorite quotes from the novel "Todas las personas que fui" by Alfonso Casas. Although I could highlight all of it.
 
 > Yo he visto esos colores, sé que existen.

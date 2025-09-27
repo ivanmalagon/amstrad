@@ -295,3 +295,11 @@ a:active {
   margin-left: 0;
   margin-right: 0;
 }
+
+img {
+  display: block;
+  max-width: 300px;
+  height: auto;
+  width: 100%;
+  margin: 0 auto;
+}
