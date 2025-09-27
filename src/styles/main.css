@@ -200,14 +200,14 @@ blockquote p {
 .home-header {
   display: flex;
   font-family: var(--font-header);
-  font-size: var(--font-size-xlarge);
+  font-size: var(--font-size-large);
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
   color: var(--white);
   text-decoration: none;
   background-color: var(--bg-blue);
-  height: calc(var(--font-size-xlarge) * 1.5);
+  height: calc(var(--font-size-large) * 1.5);
   align-items: center;
   justify-content: flex-start;
   padding: 0 1rem;
@@ -243,7 +243,7 @@ blockquote p {
   flex-direction: row;
   align-items: baseline;
   justify-content: flex-start;
-  font-size: var(--font-size-large);
+  font-size: var(--font-size-base);
 }
 
 .article-list li .date {

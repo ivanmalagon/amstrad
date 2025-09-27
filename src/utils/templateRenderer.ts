@@ -39,6 +39,10 @@ export class TemplateRenderer {
 
     const html = this.renderLayout(layout, {
       title: `${post.title} - ${blogConfig.title}`,
+      description: post.excerpt || `Read ${post.title} on ${blogConfig.title}`,
+      image: `${blogConfig.baseUrl}/public/hacheka_logo.png`,
+      url: `${blogConfig.baseUrl}/posts/${post.slug}.html`,
+      ogType: 'article',
       content: `${articleNav}${articleContent}`
     })
 
@@ -81,6 +85,10 @@ export class TemplateRenderer {
 
     const html = this.renderLayout(layout, {
       title: blogConfig.title,
+      description: 'Personal blog by Ivan Malagon - Things that resonate with me',
+      image: `${blogConfig.baseUrl}/public/hacheka_logo.png`,
+      url: blogConfig.baseUrl,
+      ogType: 'website',
       content: `${homeNav}${content}`
     })
 
