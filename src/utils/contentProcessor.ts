@@ -6,6 +6,23 @@ import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { BlogPost } from '../types/blog'
 
+// Configure marked to handle external links
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  hooks: {
+    postprocess(html: string) {
+      // Add target="_blank" and rel="noopener noreferrer" to external links
+      return html.replace(
+        /<a href="(https?:\/\/[^"]+)"/g,
+        '<a href="$1" target="_blank" rel="noopener noreferrer"'
+      )
+    },
+    options: {},
+    preprocess: (markdown: string) => markdown,
+    processAllTokens: (tokens: any[]) => tokens
+  }
+})
+
 export class ContentProcessor {
   private contentDir: string
 

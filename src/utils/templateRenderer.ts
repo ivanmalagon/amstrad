@@ -24,7 +24,7 @@ export class TemplateRenderer {
       </nav>
     `
     const articleContent = `
-      <article>
+      <article class="post">
         <header>
           <h1>${post.title}</h1>
           <div class="post-meta">
