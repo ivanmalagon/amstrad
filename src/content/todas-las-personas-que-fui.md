@@ -1,10 +1,10 @@
 ---
 title: Todas las personas que fui
-date: 2025-06-12
-updated: 2024-06-12
+date: 2025-09-12
+updated: 2025-09-12
 ---
 
-![Todas las personas que fui SNES](/public/todas-las-personas.png)
+![Todas las personas que fui](/public/todas-las-personas.png)
 
 "Todas las personas que fui" de Alfonso Casas es un cómic que me recomendaron, me pillé en la biblio, me lo tuve que comprar, lo he regalado (y lo regalaré más veces) y ahora me lo tengo que volver a comprar. No puede no estar cerca. Asi de bueno me parece.
 

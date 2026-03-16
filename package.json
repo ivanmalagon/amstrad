@@ -9,6 +9,7 @@
     "dev": "ts-node src/dev-server.ts",
     "dev:watch": "ts-node src/dev-server.ts",
     "dev:build-only": "ts-node src/build.ts dev",
+    "preview": "ts-node src/preview.ts",
     "clean": "rm -rf site"
   },
   "keywords": [],
