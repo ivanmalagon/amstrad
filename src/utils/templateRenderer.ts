@@ -100,7 +100,6 @@ export class TemplateRenderer {
       : ''
 
     const content = `
-      <a href="/" class="back-link">← resonance</a>
       <article class="post">
         <header>
           <h1>${post.title}</h1>

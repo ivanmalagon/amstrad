@@ -153,7 +153,7 @@ export class ContentProcessor {
         throw new Error('Invalid date')
       }
 
-      return format(date, 'dd MMM, yyyy')
+      return format(date, 'MMMM yyyy')
     } catch (error) {
       console.warn(`Invalid date format: ${dateString}`)
       return dateString
