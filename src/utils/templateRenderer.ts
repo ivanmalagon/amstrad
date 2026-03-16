@@ -26,7 +26,7 @@ export class TemplateRenderer {
       .join('\n        ')
 
     return `
-      <a href="/" class="site-title">RESONANCE</a>
+      <a href="/" class="site-title">Work in progress</a>
       <nav class="tag-nav">
         ${tagLinks}
       </nav>
@@ -49,6 +49,7 @@ export class TemplateRenderer {
     const layout = this.loadLayout()
 
     const content = `
+      <p class="section-title">Personal brain dump of Ivan Malagon. Welcome.</p>
       <ul class="article-list">
         ${this.buildArticleList(posts)}
       </ul>

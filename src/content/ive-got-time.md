@@ -2,6 +2,7 @@
 title: I've got time
 date: 2025-10-13
 updated: 2025-10-13
+draft: true
 tag: Books
 ---
 

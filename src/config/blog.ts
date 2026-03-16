@@ -1,7 +1,7 @@
 import { BlogConfig } from '../types/blog'
 
 export const blogConfig: BlogConfig = {
-  title: 'Resonance',
+  title: 'Work in progress',
   author: 'Ivan',
   baseUrl: 'https://ivanmalagon.com'
 }
