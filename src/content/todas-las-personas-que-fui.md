@@ -2,6 +2,7 @@
 title: Todas las personas que fui
 date: 2025-09-12
 updated: 2025-09-12
+tag: Books
 ---
 
 ![Todas las personas que fui](/public/todas-las-personas.png)

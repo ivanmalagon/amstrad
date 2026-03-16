@@ -6,6 +6,8 @@ export interface BlogPost {
   content: string
   excerpt?: string
   filename: string
+  tag?: string
+  draft?: boolean
 }
 
 export interface BlogConfig {

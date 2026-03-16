@@ -39,7 +39,8 @@ export class ContentProcessor {
       file => file.endsWith('.md') && file !== '.gitkeep'
     )
 
-    const posts = await Promise.all(markdownFiles.map(file => this.parsePost(file)))
+    const allParsed = await Promise.all(markdownFiles.map(file => this.parsePost(file)))
+    const posts = allParsed.filter(p => !p.draft)
 
     // Sort posts by date (newest first)
     return posts.sort((a, b) => {
@@ -86,7 +87,9 @@ export class ContentProcessor {
       slug,
       content: htmlContent,
       excerpt,
-      filename
+      filename,
+      tag: data.tag,
+      draft: data.draft === true
     }
   }
 

@@ -12,23 +12,101 @@ export class TemplateRenderer {
     this.outputDir = outputDir
   }
 
-  /**
-   * Render a single blog post page
-   */
-  async renderPost(post: BlogPost): Promise<void> {
-    const layout = this.loadLayout()
+  private tagSlug(tag: string): string {
+    return tag.toLowerCase().replace(/\s+/g, '-')
+  }
 
-    const articleNav = `
-      <nav class="article-nav">
-        <span><a href="/" class="home-link">← resonance</a></span>
+  private buildSidebar(allTags: string[], activeTag?: string): string {
+    const tagLinks = allTags
+      .map(tag => {
+        const slug = this.tagSlug(tag)
+        const isActive = tag === activeTag
+        return `<a href="/tags/${slug}.html" class="tag-link${isActive ? ' active' : ''}">${tag}</a>`
+      })
+      .join('\n        ')
+
+    return `
+      <a href="/" class="site-title">RESONANCE</a>
+      <nav class="tag-nav">
+        ${tagLinks}
       </nav>
     `
-    const articleContent = `
+  }
+
+  private buildArticleList(posts: BlogPost[]): string {
+    return posts
+      .map(
+        post => `
+      <li>
+        <a href="/posts/${post.slug}.html">${post.title}</a>
+        <span class="date">${post.date}</span>
+      </li>`
+      )
+      .join('')
+  }
+
+  async renderHomePage(posts: BlogPost[], allTags: string[]): Promise<void> {
+    const layout = this.loadLayout()
+
+    const content = `
+      <ul class="article-list">
+        ${this.buildArticleList(posts)}
+      </ul>
+    `
+
+    const html = this.renderLayout(layout, {
+      title: blogConfig.title,
+      description: 'Personal blog by Ivan Malagon - Things that resonate with me',
+      image: `${blogConfig.baseUrl}/public/hacheka_logo.png`,
+      url: blogConfig.baseUrl,
+      ogType: 'website',
+      sidebar: this.buildSidebar(allTags),
+      content
+    })
+
+    await this.writeFile('index.html', html)
+  }
+
+  async renderTagPage(tag: string, posts: BlogPost[], allTags: string[]): Promise<void> {
+    const layout = this.loadLayout()
+
+    const content = `
+      <p class="section-title">${tag}</p>
+      <ul class="article-list">
+        ${this.buildArticleList(posts)}
+      </ul>
+    `
+
+    const slug = this.tagSlug(tag)
+
+    const html = this.renderLayout(layout, {
+      title: `${tag} - ${blogConfig.title}`,
+      description: `Articles tagged ${tag} on ${blogConfig.title}`,
+      image: `${blogConfig.baseUrl}/public/hacheka_logo.png`,
+      url: `${blogConfig.baseUrl}/tags/${slug}.html`,
+      ogType: 'website',
+      sidebar: this.buildSidebar(allTags, tag),
+      content
+    })
+
+    await this.writeFile(`tags/${slug}.html`, html)
+  }
+
+  async renderPost(post: BlogPost, allTags: string[]): Promise<void> {
+    const layout = this.loadLayout()
+
+    const tagHtml = post.tag
+      ? `<span class="post-tag"><a href="/tags/${this.tagSlug(post.tag)}.html">${post.tag}</a></span>`
+      : ''
+
+    const content = `
+      <a href="/" class="back-link">← resonance</a>
       <article class="post">
         <header>
           <h1>${post.title}</h1>
           <div class="post-meta">
             <time class="mini">${post.date}</time>
+            ${tagHtml}
           </div>
         </header>
         <div class="post-content">
@@ -43,96 +121,36 @@ export class TemplateRenderer {
       image: `${blogConfig.baseUrl}/public/hacheka_logo.png`,
       url: `${blogConfig.baseUrl}/posts/${post.slug}.html`,
       ogType: 'article',
-      content: `${articleNav}${articleContent}`
+      sidebar: this.buildSidebar(allTags, post.tag),
+      content
     })
 
     await this.writeFile(`posts/${post.slug}.html`, html)
   }
 
-  /**
-   * Render the home page with article index
-   */
-  async renderHomePage(posts: BlogPost[]): Promise<void> {
-    const layout = this.loadLayout()
-
-    const articlesHtml = posts
-      .map(
-        post => `
-      <li>
-        <span>
-          <a href="/posts/${post.slug}.html">${post.title}</a>
-        </span>
-        <span class="mini date">
-          <time>${post.date}</time>
-        </span>
-      </li>
-    `
-      )
-      .join('')
-
-    const content = `
-      <div class="spacer"></div>
-      <ul class="article-list">
-        ${articlesHtml}
-      </ul>
-    `
-
-    const homeNav = `
-      <nav class="home-nav">
-        <span class="home-header">RESONANCE</span>
-      </nav>
-    `
-
-    const html = this.renderLayout(layout, {
-      title: blogConfig.title,
-      description: 'Personal blog by Ivan Malagon - Things that resonate with me',
-      image: `${blogConfig.baseUrl}/public/hacheka_logo.png`,
-      url: blogConfig.baseUrl,
-      ogType: 'website',
-      content: `${homeNav}${content}`
-    })
-
-    await this.writeFile('index.html', html)
-  }
-
-  /**
-   * Load the base layout template
-   */
   private loadLayout(): string {
-    const layoutPath = path.join(this.layoutPath, 'base.html')
-    return fs.readFileSync(layoutPath, 'utf-8')
+    const layoutFilePath = path.join(this.layoutPath, 'base.html')
+    return fs.readFileSync(layoutFilePath, 'utf-8')
   }
 
-  /**
-   * Render the layout with content and variables
-   */
-  private renderLayout(
-    layout: string,
-    variables: { [key: string]: string }
-  ): string {
+  private renderLayout(layout: string, variables: { [key: string]: string }): string {
     let html = layout
 
-    // Load and inject CSS
+    // Inject CSS inline
     const cssContent = this.loadCSS()
-    html = html.replace('{{ cssPath }}', '')
-    html = html.replace('</head>', `<style>${cssContent}</style>\n  </head>`)
+    html = html.replace('{{ cssPath }}', `<style>${cssContent}</style>`)
 
     Object.entries(variables).forEach(([key, value]) => {
-      const placeholder = `{{ ${key} }}`
-      html = html.replace(new RegExp(placeholder, 'g'), value)
+      html = html.replace(new RegExp(`\\{\\{ ${key} \\}\\}`, 'g'), value)
     })
 
     return html
   }
 
-  /**
-   * Write HTML content to file
-   */
   private async writeFile(filePath: string, content: string): Promise<void> {
     const fullPath = path.join(this.outputDir, filePath)
     const dir = path.dirname(fullPath)
 
-    // Create directory if it doesn't exist
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true })
     }
@@ -140,9 +158,6 @@ export class TemplateRenderer {
     fs.writeFileSync(fullPath, content, 'utf-8')
   }
 
-  /**
-   * Copy static assets to output directory
-   */
   async copyAssets(): Promise<void> {
     const publicDir = 'src/public'
     const outputPublicDir = path.join(this.outputDir, 'public')
@@ -152,31 +167,17 @@ export class TemplateRenderer {
     }
   }
 
-  /**
-   * Load and return the CSS content
-   */
   private loadCSS(): string {
-    const stylesDir = 'src/styles'
-    const mainCssPath = path.join(stylesDir, 'main.css')
-
-    if (fs.existsSync(mainCssPath)) {
-      return fs.readFileSync(mainCssPath, 'utf-8')
-    }
-
-    return ''
+    const mainCssPath = path.join('src/styles', 'main.css')
+    return fs.existsSync(mainCssPath) ? fs.readFileSync(mainCssPath, 'utf-8') : ''
   }
 
-  /**
-   * Copy directory recursively
-   */
   private copyDirectory(src: string, dest: string): void {
     if (!fs.existsSync(dest)) {
       fs.mkdirSync(dest, { recursive: true })
     }
 
-    const files = fs.readdirSync(src)
-
-    files.forEach(file => {
+    fs.readdirSync(src).forEach(file => {
       const srcPath = path.join(src, file)
       const destPath = path.join(dest, file)
 

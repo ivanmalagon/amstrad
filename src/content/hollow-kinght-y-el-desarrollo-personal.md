@@ -2,6 +2,8 @@
 title: Hollow Knight y el desarrollo personal
 date: 2025-12-11
 updated: 2025-12-11
+tag: Posts
+draft: true
 ---
 
 ![Thread of beads](/public/bead-thread.png)

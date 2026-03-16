@@ -17,37 +17,36 @@ export class BlogGenerator {
     this.rssGenerator = new RSSGenerator(blogConfig, blogConfig.rssMaxItems)
   }
 
-  /**
-   * Generate the complete blog
-   */
   async generate(): Promise<void> {
     console.log('🚀 Iniciando generación del blog...')
 
     try {
-      // Load all posts
       console.log('📖 Cargando artículos...')
       const allPosts = await this.contentProcessor.getAllPosts()
       console.log(`✅ ${allPosts.length} artículos cargados`)
 
-      // Copy static assets
+      // Collect unique tags, preserving first-seen order
+      const allTags = [...new Set(allPosts.map(p => p.tag).filter(Boolean) as string[])]
+
       console.log('📁 Copiando archivos estáticos...')
       await this.templateRenderer.copyAssets()
-      console.log('✅ Archivos estáticos copiados')
 
-      // Generate individual post pages
       console.log('📝 Generando páginas de artículos...')
-      await this.generatePostPages(allPosts)
-      console.log('✅ Páginas de artículos generadas')
+      await Promise.all(allPosts.map(post => this.templateRenderer.renderPost(post, allTags)))
 
-      // Generate home page
+      console.log('🏷️  Generando páginas de tags...')
+      await Promise.all(
+        allTags.map(tag => {
+          const tagged = allPosts.filter(p => p.tag === tag)
+          return this.templateRenderer.renderTagPage(tag, tagged, allTags)
+        })
+      )
+
       console.log('🏠 Generando página de inicio...')
-      await this.templateRenderer.renderHomePage(allPosts)
-      console.log('✅ Página de inicio generada')
+      await this.templateRenderer.renderHomePage(allPosts, allTags)
 
-      // Generate RSS feed
       console.log('📡 Generando feed RSS...')
       await this.generateRSSFeed(allPosts)
-      console.log('✅ Feed RSS generado')
 
       console.log('🎉 ¡Blog generado exitosamente!')
     } catch (error) {
@@ -56,35 +55,23 @@ export class BlogGenerator {
     }
   }
 
-  /**
-   * Generate individual post pages
-   */
-  private async generatePostPages(posts: BlogPost[]): Promise<void> {
-    const promises = posts.map(post => this.templateRenderer.renderPost(post))
-    await Promise.all(promises)
-  }
-
-  /**
-   * Generate a specific post by slug
-   */
   async generatePost(slug: string): Promise<void> {
-    const post = await this.contentProcessor.getPostBySlug(slug)
+    const allPosts = await this.contentProcessor.getAllPosts()
+    const allTags = [...new Set(allPosts.map(p => p.tag).filter(Boolean) as string[])]
+    const post = allPosts.find(p => p.slug === slug)
+
     if (!post) {
       throw new Error(`Post with slug "${slug}" not found`)
     }
 
-    await this.templateRenderer.renderPost(post)
+    await this.templateRenderer.renderPost(post, allTags)
     console.log(`✅ Post "${post.title}" generado`)
   }
 
-  /**
-   * Generate RSS feed
-   */
   private async generateRSSFeed(posts: BlogPost[]): Promise<void> {
     const rssContent = this.rssGenerator.generateRSSFeed(posts)
     const outputPath = path.join('site', 'rss.xml')
 
-    // Ensure the site directory exists
     if (!fs.existsSync('site')) {
       fs.mkdirSync('site', { recursive: true })
     }
