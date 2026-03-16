@@ -62,8 +62,39 @@ export class ContentProcessor {
     // Generate slug from filename (remove .md extension)
     const slug = filename.replace(/\.md$/, '')
 
+    // Extract reference link definitions (e.g. [1]: https://...) before marked consumes them
+    const refPattern = /^\[([^\]]+)\]:\s*(\S+)(?:\s+"([^"]*)")?$/gm
+    const refs: Array<{ label: string; url: string; title?: string }> = []
+    let refMatch
+    while ((refMatch = refPattern.exec(content)) !== null) {
+      refs.push({ label: refMatch[1], url: refMatch[2], title: refMatch[3] })
+    }
+
+    // Preprocess: replace [text][label] with plain text + superscript number,
+    // then strip the reference definition lines so marked doesn't see them
+    const refMap = new Map(refs.map(r => [r.label, r]))
+    const processedContent = content
+      .replace(/\[([^\]]+)\]\[([^\]]+)\]/g, (_, text, label) => {
+        if (refMap.has(label)) {
+          return `${text}<sup><a href="#ref-${label}">${label}</a></sup>`
+        }
+        return `[${text}][${label}]`
+      })
+      .replace(/^\[[^\]]+\]:\s*\S+.*$/gm, '')
+
     // Convert markdown to HTML
-    const htmlContent = await marked(content)
+    let htmlContent = await marked(processedContent)
+
+    // Append a links section for any reference definitions found
+    if (refs.length > 0) {
+      const items = refs
+        .map(ref => {
+          const display = ref.title || ref.url
+          return `<li id="ref-${ref.label}"><a href="${ref.url}" target="_blank" rel="noopener noreferrer">${display}</a></li>`
+        })
+        .join('\n')
+      htmlContent += `\n<section class="post-links"><ol>${items}</ol></section>`
+    }
 
     // Generate excerpt (first 200 characters of content)
     const excerpt = this.generateExcerpt(content)
