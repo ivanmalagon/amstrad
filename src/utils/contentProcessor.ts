@@ -44,8 +44,8 @@ export class ContentProcessor {
 
     // Sort posts by date (newest first)
     return posts.sort((a, b) => {
-      const dateA = new Date(a.date)
-      const dateB = new Date(b.date)
+      const dateA = new Date(a.rawDate)
+      const dateB = new Date(b.rawDate)
       return dateB.getTime() - dateA.getTime()
     })
   }
@@ -100,9 +100,8 @@ export class ContentProcessor {
     const excerpt = this.generateExcerpt(content)
 
     // Format dates - handle both string and Date objects
-    const formattedDate = this.formatDate(
-      data.date instanceof Date ? data.date.toISOString().split('T')[0] : data.date
-    )
+    const rawDate = data.date instanceof Date ? data.date.toISOString().split('T')[0] : data.date
+    const formattedDate = this.formatDate(rawDate)
     const formattedUpdated = data.updated
       ? this.formatDate(
           data.updated instanceof Date
@@ -114,6 +113,7 @@ export class ContentProcessor {
     return {
       title: data.title || 'Sin título',
       date: formattedDate,
+      rawDate,
       updated: formattedUpdated,
       slug,
       content: htmlContent,

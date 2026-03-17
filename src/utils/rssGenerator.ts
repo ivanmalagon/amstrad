@@ -24,7 +24,7 @@ export class RSSGenerator {
     const now = new Date()
     const lastBuildDate = now.toUTCString()
     const pubDate =
-      posts.length > 0 ? new Date(posts[0].date).toUTCString() : now.toUTCString()
+      posts.length > 0 ? new Date(posts[0].rawDate).toUTCString() : now.toUTCString()
 
     const rssItems = posts
       .slice(0, this.maxItems) // Limit to configured number of posts
@@ -61,7 +61,7 @@ ${rssItems}
    */
   private generateRSSItem(post: BlogPost): string {
     const postUrl = `${this.config.baseUrl}/posts/${post.slug}.html`
-    const pubDate = new Date(post.date).toUTCString()
+    const pubDate = new Date(post.rawDate).toUTCString()
     const guid = `${this.config.baseUrl}/posts/${post.slug}`
 
     // Clean HTML content for RSS (remove images and other problematic elements)

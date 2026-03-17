@@ -16,17 +16,20 @@ export class TemplateRenderer {
     return tag.toLowerCase().replace(/\s+/g, '-')
   }
 
-  private buildSidebar(allTags: string[], activeTag?: string): string {
+  private buildSidebar(allTags: string[], activeTag?: string, directSlugs?: Map<string, string>): string {
     const tagLinks = allTags
       .map(tag => {
-        const slug = this.tagSlug(tag)
         const isActive = tag === activeTag
-        return `<a href="/tags/${slug}.html" class="tag-link${isActive ? ' active' : ''}">${tag}</a>`
+        const directSlug = directSlugs?.get(tag)
+        const href = directSlug
+          ? `/posts/${directSlug}.html`
+          : `/tags/${this.tagSlug(tag)}.html`
+        return `<a href="${href}" class="tag-link${isActive ? ' active' : ''}">${tag}</a>`
       })
       .join('\n        ')
 
     return `
-      <a href="/" class="site-title">Work in progress</a>
+      <a href="/" class="site-title">Brain Dump</a>
       <nav class="tag-nav">
         ${tagLinks}
       </nav>
@@ -45,7 +48,7 @@ export class TemplateRenderer {
       .join('')
   }
 
-  async renderHomePage(posts: BlogPost[], allTags: string[]): Promise<void> {
+  async renderHomePage(posts: BlogPost[], allTags: string[], directSlugs?: Map<string, string>): Promise<void> {
     const layout = this.loadLayout()
 
     const content = `
@@ -61,14 +64,14 @@ export class TemplateRenderer {
       image: `${blogConfig.baseUrl}/public/hacheka_logo.png`,
       url: blogConfig.baseUrl,
       ogType: 'website',
-      sidebar: this.buildSidebar(allTags),
+      sidebar: this.buildSidebar(allTags, undefined, directSlugs),
       content
     })
 
     await this.writeFile('index.html', html)
   }
 
-  async renderTagPage(tag: string, posts: BlogPost[], allTags: string[]): Promise<void> {
+  async renderTagPage(tag: string, posts: BlogPost[], allTags: string[], directSlugs?: Map<string, string>): Promise<void> {
     const layout = this.loadLayout()
 
     const content = `
@@ -86,17 +89,17 @@ export class TemplateRenderer {
       image: `${blogConfig.baseUrl}/public/hacheka_logo.png`,
       url: `${blogConfig.baseUrl}/tags/${slug}.html`,
       ogType: 'website',
-      sidebar: this.buildSidebar(allTags, tag),
+      sidebar: this.buildSidebar(allTags, tag, directSlugs),
       content
     })
 
     await this.writeFile(`tags/${slug}.html`, html)
   }
 
-  async renderPost(post: BlogPost, allTags: string[]): Promise<void> {
+  async renderPost(post: BlogPost, allTags: string[], directSlugs?: Map<string, string>): Promise<void> {
     const layout = this.loadLayout()
 
-    const tagHtml = post.tag
+    const tagHtml = post.tag && !directSlugs?.has(post.tag)
       ? `<span class="post-tag"><a href="/tags/${this.tagSlug(post.tag)}.html">${post.tag}</a></span>`
       : ''
 
@@ -121,7 +124,7 @@ export class TemplateRenderer {
       image: `${blogConfig.baseUrl}/public/hacheka_logo.png`,
       url: `${blogConfig.baseUrl}/posts/${post.slug}.html`,
       ogType: 'article',
-      sidebar: this.buildSidebar(allTags, post.tag),
+      sidebar: this.buildSidebar(allTags, post.tag, directSlugs),
       content
     })
 

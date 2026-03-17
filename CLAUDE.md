@@ -41,9 +41,20 @@ draft: true         # omit from build entirely
 
 Available tags (categories): Books, Posts — add new ones freely, a page is generated automatically.
 
+### Special tags: `Now` and `About`
+
+These tags behave as direct-link single pages (implemented via `DIRECT_TAGS` in `blogGenerator.ts`):
+
+- Always exactly one post per tag.
+- `Now` is always first in the sidebar, `About` is always last; other tags appear in between.
+- Unlike `Now`, `About` goes last — not first.
+- Clicking them in the sidebar links directly to the post page — no tag listing page is generated.
+- Excluded from the home page list.
+- The tag label is not rendered in the post header.
+
 ## Design
 
-- **Font**: Libre Baskerville via Google Fonts (swap to test others in `base.html` + `--font` in `main.css`)
+- **Font**: Georgia (system font, no external dependency) — change via `--font` in `main.css`
 - **Palette**: warm off-white `#f8f6f1`, near-black `#1c1c1c`, muted `#8a8680`
 - **Layout**: two-column grid on desktop (fixed sidebar left, content centered right); stacked on mobile
 - **CSS variables** to change: `--font`, `--font-size-base`, `--sidebar-width`, `--content-max-width`

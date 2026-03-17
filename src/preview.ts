@@ -5,7 +5,7 @@ import http from 'http'
 import fs from 'fs'
 import path from 'path'
 
-const PORT = 3000
+const PORT = 3003
 const SITE_DIR = path.resolve('site')
 
 const MIME_TYPES: Record<string, string> = {
